@@ -30,11 +30,13 @@ module.exports = function(browserName) {
         if (err) {
           console.error(err);
           browser.quit();
+          console.error('Test Failed');
           process.exit(1);
         }
 
         title.should.include('GitHub');
         browser.quit();
+        console.log('Test Passed');
       });
     });
   });
