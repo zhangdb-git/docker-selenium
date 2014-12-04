@@ -4,6 +4,7 @@ HUB_NAME=$1
 TEST_COUNT=$2
 REPEATER=$3
 BROWSER=$4
+ROOT_FOLDER=$5
 
 if [ -z $HUB_NAME ]; then
   echo Must provide hub name
@@ -22,7 +23,11 @@ if [ -z $BROWSER ]; then
   BROWSER=chrome
 fi
 
-FOLDER=stress-logs/$REPEATER
+if [ -z $ROOT_FOLDER ]; then
+  ROOT_FOLDER=stress-logs
+fi
+
+FOLDER=$ROOT_FOLDER/$REPEATER
 
 mkdir -p $FOLDER
 

@@ -21,16 +21,21 @@ docker build -t selenium/test:local ./Test
 echo Building test metrics image
 docker build -t selenium/metrics:local ./Metrics
 
+BEGIN=$(date +%s)
+
 rm -rf $FOLDER
 mkdir $FOLDER
 
 echo Starting Hub
 HUB=$(docker run -d selenium/hub:2.44.0)
+HUB_METRICS=$(docker run -d -v /sys/fs/cgroup/memory/docker:/metrics selenium/metrics:local $HUB)
 HUB_NAME=$(docker inspect -f '{{ .Name  }}' $HUB | sed s:/::)
 docker logs -t -f $HUB > $FOLDER/hub.log 2>&1 &
+docker logs -t -f $HUB_METRICS > $FOLDER/hub-metrics.log 2>&1 &
 sleep 2
 
 declare -a NODES
+declare -a NODES_METRICS
 
 INDEX=0
 while [ $INDEX -lt $NODE_COUNT ]; do
@@ -40,6 +45,7 @@ while [ $INDEX -lt $NODE_COUNT ]; do
   docker logs -t -f $NODE > $FOLDER/node-$INDEX.log 2>&1 &
   docker logs -t -f $NODE_METRICS > $FOLDER/node-metrics-$INDEX.log 2>&1 &
   NODES[$INDEX]=$NODE
+  NODES_METRICS[$INDEX]=$NODE_METRICS
   let INDEX=INDEX+1
 done
 sleep 2
@@ -49,7 +55,7 @@ declare -a REPEATERS
 INDEX=0
 while [ $INDEX -lt $REPEATER_COUNT ]; do
   echo Starting Repeater $INDEX
-  ./test-repeat.sh $HUB_NAME $TESTS_PER_REPEATER $INDEX $BROWSER &
+  ./test-repeat.sh $HUB_NAME $TESTS_PER_REPEATER $INDEX $BROWSER $FOLDER &
   REPEATERS[$INDEX]=$!
   let INDEX=INDEX+1
 done
@@ -65,14 +71,24 @@ INDEX=0
 while [ $INDEX -lt $NODE_COUNT ]; do
   echo Stopping Node $INDEX
   NODE=${NODES[$INDEX]}
+  NODE_METRICS=${NODES_METRICS[$INDEX]}
   docker rm -f $NODE > /dev/null 2>&1 &
+  docker rm -f $NODE_METRICS > /dev/null 2>&1 &
   let INDEX=INDEX+1
 done
 
 echo Stopping Hub
 docker rm -f $HUB > /dev/null 2>&1 &
+docker rm -f $HUB_METRICS > /dev/null 2>&1 &
 
 wait
+
+END=$(date +%s)
+
+DIFF=$(($END - $BEGIN))
+HOURS=$(($DIFF / 3600))
+MINS=$(($DIFF / 60))
+SECS=$(($DIFF % 60))
 
 RESULTS=$FOLDER/results.txt
 
@@ -80,7 +96,8 @@ echo -----------------------------------------   > $RESULTS
 echo Summary:                                    >> $RESULTS
 echo -----------------------------------------   >> $RESULTS
 echo "Repeaters:          $REPEATER_COUNT"       >> $RESULTS
-echo "Tests per Repeater: $TESTS_PER_REPEATER"   >> $RESULTS
+echo   "Tests per Repeater: $TESTS_PER_REPEATER"   >> $RESULTS
+printf "Total Time:         %02d:%02d:%02d\n" $HOURS $MINS $SECS >> $RESULTS
 echo -----------------------------------------   >> $RESULTS
 echo -----------------------------------------   >> $RESULTS
 
