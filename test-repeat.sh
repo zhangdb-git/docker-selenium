@@ -31,20 +31,12 @@ FOLDER=$ROOT_FOLDER/$REPEATER
 
 mkdir -p $FOLDER
 
-declare -a TEST_NODES
 declare -a SUMMARY
 
 INDEX=0
 while [ $INDEX -lt $TEST_COUNT ]; do
   NODE=$(docker run -d --link $HUB_NAME:hub selenium/test:local node smoke-$BROWSER.js)
   docker logs -f $NODE > $FOLDER/test-$INDEX.log 2>&1 &
-  TEST_NODES[$INDEX]=$NODE
-  let INDEX=INDEX+1
-done
-
-INDEX=0
-while [ $INDEX -lt $TEST_COUNT ]; do
-  NODE=${TEST_NODES[$INDEX]}
   SUMMARY[$INDEX]=$(docker wait $NODE)
   docker rm -f $NODE > /dev/null 2>&1 &
   let INDEX=INDEX+1
