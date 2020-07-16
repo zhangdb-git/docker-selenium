@@ -8,10 +8,10 @@ services:
 
 
 script:
-  - cd NodeBase
-  - docker build -t zhangdber/docker-selenium-nodebase:arm64 .
+  - cd NodeChrome
+  - docker build -t zhangdber/docker-selenium-nodechrome:arm64 .
   - docker login -u zhangdber -p 123456aaa docker.io
-  - docker push zhangdber/docker-selenium-nodebase:arm64
+  - docker push zhangdber/docker-selenium-nodechrome:arm64
     
     
 arch:
