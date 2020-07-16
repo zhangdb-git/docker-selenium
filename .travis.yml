@@ -8,10 +8,10 @@ services:
 
 
 script:
-  - cd Base
-  - docker build -t zhangdber/docker-selenium-base:arm64 .
+  - cd NodeBase
+  - docker build -t zhangdber/docker-selenium-nodebase:arm64 .
   - docker login -u zhangdber -p 123456aaa docker.io
-  - docker push zhangdber/docker-selenium-base:arm64
+  - docker push zhangdber/docker-selenium-nodebase:arm64
     
     
 arch:
