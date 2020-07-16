@@ -6,9 +6,6 @@ python:
 services:
   - docker
 
-notifications:
-  slack: seleniumhq:Kx5MB7T51SPMpbBMYfvxNW4q
-
 
 script:
   - cd Base
