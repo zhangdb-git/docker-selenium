@@ -9,9 +9,10 @@ services:
 
 script:
   - cd NodeChrome
-  - docker build -t zhangdber/docker-selenium-nodechrome:arm64 .
+  - wget https://github.com/AdoptOpenJDK/openjdk15-binaries/releases/download/jdk15u-2020-08-15-04-46/OpenJDK15U-jdk_aarch64_linux_hotspot_2020-08-15-04-46.tar.gz
+  - docker build -t zhangdber/openjdk15u:arm64 .
   - docker login -u zhangdber -p 123456aaa docker.io
-  - docker push zhangdber/docker-selenium-nodechrome:arm64
+  - docker push zhangdber/openjdk15u:arm64
     
     
 arch:
