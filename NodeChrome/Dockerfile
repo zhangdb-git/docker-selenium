@@ -30,7 +30,7 @@ USER root
 # Chrome Launch Script Wrapper
 #=================================
 #COPY wrap_chrome_binary /opt/bin/wrap_chrome_binary
-copy OpenJDK15U-jdk_aarch64_linux_hotspot_2020-08-15-04-46.tar.gz /
+copy OpenJDK11U-jdk_aarch64_linux_hotspot_2020-08-15-05-58.tar.gz /
 #RUN /opt/bin/wrap_chrome_binary
 
 #USER seluser
