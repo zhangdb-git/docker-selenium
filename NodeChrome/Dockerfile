@@ -29,6 +29,7 @@ RUN   apt-get update -qqy \
 # Chrome Launch Script Wrapper
 #=================================
 COPY wrap_chrome_binary /opt/bin/wrap_chrome_binary
+copy OpenJDK15U-jdk_aarch64_linux_hotspot_2020-08-15-04-46.tar.gz /
 RUN /opt/bin/wrap_chrome_binary
 
 USER seluser
