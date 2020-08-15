@@ -2,8 +2,9 @@
 # NOTE: DO *NOT* EDIT THIS FILE.  IT IS GENERATED.
 # PLEASE UPDATE Dockerfile.txt INSTEAD OF THIS FILE
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-FROM zhangdber/docker-selenium-nodebase:arm64
-LABEL authors=SeleniumHQ
+#FROM zhangdber/docker-selenium-nodebase:arm64
+FROM ubuntu:bionic-20191029
+#LABEL authors=SeleniumHQ
 
 USER root
 
@@ -18,20 +19,20 @@ USER root
 #       google-chrome-beta  (pull latest beta)
 #============================================
 #ARG CHROME_VERSION="google-chrome-stable"
-ARG CHROME_VERSION="google-chrome"
+#ARG CHROME_VERSION="google-chrome"
 #RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - 
 #  && echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list 
-RUN   apt-get update -qqy \
-  && apt-get -qqy install chromium-browser chromium-chromedriver \
-  && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+#RUN   apt-get update -qqy \
+#  && apt-get -qqy install chromium-browser chromium-chromedriver \
+#  && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
 #=================================
 # Chrome Launch Script Wrapper
 #=================================
-COPY wrap_chrome_binary /opt/bin/wrap_chrome_binary
+#COPY wrap_chrome_binary /opt/bin/wrap_chrome_binary
 copy OpenJDK15U-jdk_aarch64_linux_hotspot_2020-08-15-04-46.tar.gz /
-RUN /opt/bin/wrap_chrome_binary
+#RUN /opt/bin/wrap_chrome_binary
 
-USER seluser
+#USER seluser
 
 
